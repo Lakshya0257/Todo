@@ -62,8 +62,8 @@ class _homepageState extends State<homepage> {
   }
 
   String date = '';
-  @override
   TaskProgress controller=Get.put(TaskProgress());
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
