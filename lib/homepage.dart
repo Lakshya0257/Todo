@@ -1,9 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:todo/detailed_task.dart';
 import 'package:todo/edit_task.dart';
+import 'Getx/GetX_task_progress.dart';
 
 import 'main.dart';
 
@@ -42,9 +45,6 @@ class homepage extends StatefulWidget {
 
 class _homepageState extends State<homepage> {
   final _firestore = FirebaseFirestore.instance;
-  String date = '';
-  int complete = 0;
-  int incomplete = 0;
   bool loader = false;
   @override
   void initState() {
@@ -61,7 +61,9 @@ class _homepageState extends State<homepage> {
     } catch (e) {}
   }
 
+  String date = '';
   @override
+  TaskProgress controller=Get.put(TaskProgress());
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -148,85 +150,68 @@ class _homepageState extends State<homepage> {
                                   BorderRadius.all(Radius.circular(15))),
                           color: Colors.white12,
                           child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Column(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    const Text(
-                                      'Task Progress',
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontFamily: 'Mukta',
-                                          fontSize: 20),
+                            padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 30),
+                            child: GetBuilder<TaskProgress>(
+                              builder: (_){
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        const Text(
+                                          'Task Progress',
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontFamily: 'Mukta',
+                                              fontSize: 20),
+                                        ),
+                                        Text(
+                                          '${controller.completed}/${controller.completed + controller.incomplete}  task done',
+                                          style: const TextStyle(
+                                              color: Colors.grey,
+                                              fontFamily: 'Mukta',
+                                              fontSize: 15),
+                                        ),
+                                        Container(
+                                          width: 90,
+                                          decoration: BoxDecoration(
+                                            color: Colors.blueAccent,
+                                            borderRadius: BorderRadius.circular(20),
+                                          ),
+                                          child: Center(
+                                              child: Text(
+                                            controller.incomplete+controller.completed==0
+                                                ? "Nothing Left"
+                                                : controller.date,
+                                            style: const TextStyle(
+                                                color: Colors.white,
+                                                fontFamily: 'Mukta',
+                                                fontSize: 15),
+                                          )),
+                                        )
+                                      ],
                                     ),
-                                    Text(
-                                      '$complete/${complete + incomplete}  task done',
-                                      style: const TextStyle(
-                                          color: Colors.grey,
-                                          fontFamily: 'Mukta',
-                                          fontSize: 15),
-                                    ),
-                                    Container(
-                                      width: 90,
-                                      decoration: BoxDecoration(
-                                        color: Colors.blueAccent,
-                                        borderRadius: BorderRadius.circular(20),
-                                      ),
-                                      child: Center(
-                                          child: Text(
-                                        (complete + incomplete) == 0
-                                            ? "Nothing Left"
-                                            : date,
-                                        style: const TextStyle(
-                                            color: Colors.white,
-                                            fontFamily: 'Mukta',
-                                            fontSize: 15),
-                                      )),
-                                    )
-                                  ],
-                                ),
-                                Center(
-                                    child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    CircularPercentIndicator(
-                                      radius: 30,
-                                      percent: complete + incomplete == 0
-                                          ? 1
-                                          : complete / (complete + incomplete),
-                                      progressColor: Colors.blueAccent,
-                                      lineWidth: 8,
-                                      center: Text(
-                                        (complete + incomplete) == 0
-                                            ? "100%"
-                                            : ((((((complete * 100) /
-                                                                        (complete +
-                                                                            incomplete)) *
-                                                                    100 +
-                                                                0.5)
-                                                            .toInt()) /
-                                                        100)
-                                                    .toDouble())
-                                                .toString(),
-                                        style: const TextStyle(
-                                            color: Colors.white),
-                                      ),
-                                    ),
-                                    IconButton(
-                                        onPressed: () {
-                                          (context as Element).markNeedsBuild();
-                                        },
-                                        icon: const Icon(
-                                          Icons.refresh,
-                                          color: Colors.grey,
-                                        )),
-                                  ],
-                                ))
-                              ],
+                                  Center(
+                                      child: CircularPercentIndicator(
+                                        radius: 30,
+                                        percent: controller.incomplete+controller.completed==0
+                                            ? 1
+                                            : controller.task_ratio,
+                                        progressColor: Colors.blueAccent,
+                                        lineWidth: 8,
+                                        center: Text(
+                                          controller.incomplete+controller.completed==0
+                                              ? "100%"
+                                              : '${controller.percentage_task}%',
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ))
+                                ],
+                              );
+  }
                             ),
                           ),
                         ),
@@ -392,11 +377,12 @@ class _homepageState extends State<homepage> {
                                     _firestore.collection('tasks').snapshots(),
                                 builder: (context, snapshot) {
                                   urgent_tasks.clear();
-                                  complete = 0;
-                                  incomplete = 0;
+                                  int complete = 0;
+                                  int incomplete = 0;
                                   int indee = 0;
                                   if (snapshot.hasData) {
                                     final task = snapshot.data!.docs;
+                                    final task1 = snapshot.data!.docs;
                                     if (snapshot.connectionState ==
                                         ConnectionState.waiting) {
                                       return const CircularProgressIndicator();
@@ -407,17 +393,7 @@ class _homepageState extends State<homepage> {
                                           tasks['sender'] == loggedUser) {
                                         date = tasks['date'];
                                       }
-                                      if (tasks['date'] == date &&
-                                          tasks['sender'] == loggedUser) {
-                                        if (tasks['complete'] == 'complete') {
-                                          complete++;
-                                        } else if (tasks['complete'] ==
-                                            'incomplete') {
-                                          incomplete++;
-                                        }
-                                      } else if (incomplete == 0) {
-                                        date = '';
-                                      }
+
                                       if (tasks['urgent'] == 'true' &&
                                           tasks['complete'] == 'incomplete' &&
                                           tasks['sender'] == loggedUser) {
@@ -436,8 +412,25 @@ class _homepageState extends State<homepage> {
                                             description));
                                       }
                                     }
+                                    for(var taskss in task1){
+                                      if (taskss['date'] == date &&
+                                          taskss['sender'] == loggedUser) {
+                                        if (taskss['complete'] == 'complete') {
+                                          complete++;
+                                        } else if (taskss['complete'] ==
+                                            'incomplete') {
+                                          incomplete++;
+                                        }
+                                      }
+                                      else if (incomplete == 0) {
+                                        date = '';
+                                      }
+                                    }
+                                    Future.delayed(Duration.zero,(){
+                                      controller.values(complete, incomplete, date);
+                                    });
                                   }
-                                  return indee == 0
+                                  return  indee == 0
                                       ? Column(
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
