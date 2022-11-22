@@ -155,7 +155,7 @@ class log_sign_structure extends StatelessWidget {
                   margin: EdgeInsets.symmetric(
                       horizontal: MediaQuery.of(context).size.width * 0.3,
                       vertical: MediaQuery.of(context).size.height * 0.01),
-                  color: Colors.blueAccent,
+                  color: Colors.blue,
                   shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.all(Radius.circular(20))),
                   child: Center(

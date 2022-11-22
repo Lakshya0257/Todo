@@ -169,7 +169,7 @@ class completed_tasks extends StatelessWidget {
                                                     },
                                                     icon: const Icon(
                                                       Icons.edit,
-                                                      color: Colors.blueAccent,
+                                                      color: Colors.blue,
                                                     ),
                                                   ),
                                                 ),

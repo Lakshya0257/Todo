@@ -190,10 +190,10 @@ class _NewtaskState extends State<Newtask> {
                 children: [
                   Checkbox(
                       value: ischecked,
-                      activeColor: Colors.blueAccent,
+                      activeColor: Colors.blue,
                       fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
                         if (states.contains(MaterialState.disabled)) {
-                          return Colors.blueAccent;
+                          return Colors.blue;
                         }
                         return Colors.grey;
                       }),
@@ -231,7 +231,7 @@ class _NewtaskState extends State<Newtask> {
                     width: 180,
                     height: 60,
                     decoration: BoxDecoration(
-                        color: Colors.blueAccent,
+                        color: Colors.blue,
                         borderRadius: BorderRadius.circular(20)),
                     child: const Center(
                         child: Text(

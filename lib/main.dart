@@ -65,7 +65,7 @@ class _LoginState extends State<Login> {
         child: const Text(
           'Sign Up',
           style: TextStyle(
-              color: Colors.blueAccent, fontSize: 15, fontFamily: 'Mukta'),
+              color: Colors.blue, fontSize: 15, fontFamily: 'Mukta'),
         ),
       ),
       account: "Don't have an account? ",

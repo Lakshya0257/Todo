@@ -172,11 +172,11 @@ class detailed_task extends StatelessWidget {
                 children: [
                   Checkbox(
                       value: checkbox,
-                      activeColor: Colors.blueAccent,
+                      activeColor: Colors.blue,
                       fillColor: MaterialStateProperty.resolveWith<Color>(
                           (Set<MaterialState> states) {
                         if (states.contains(MaterialState.disabled)) {
-                          return Colors.blueAccent;
+                          return Colors.blue;
                         }
                         return Colors.grey;
                       }),

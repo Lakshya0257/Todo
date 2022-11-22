@@ -61,7 +61,6 @@ class _homepageState extends State<homepage> {
     } catch (e) {}
   }
 
-  String date = '';
   TaskProgress controller=Get.put(TaskProgress());
   @override
   Widget build(BuildContext context) {
@@ -174,11 +173,14 @@ class _homepageState extends State<homepage> {
                                               fontFamily: 'Mukta',
                                               fontSize: 15),
                                         ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
                                         Container(
                                           width: 90,
                                           decoration: BoxDecoration(
-                                            color: Colors.blueAccent,
-                                            borderRadius: BorderRadius.circular(20),
+                                            color: Colors.blue,
+                                            borderRadius: BorderRadius.circular(8),
                                           ),
                                           child: Center(
                                               child: Text(
@@ -195,11 +197,11 @@ class _homepageState extends State<homepage> {
                                     ),
                                   Center(
                                       child: CircularPercentIndicator(
-                                        radius: 30,
+                                        radius: 40,
                                         percent: controller.incomplete+controller.completed==0
                                             ? 1
                                             : controller.task_ratio,
-                                        progressColor: Colors.blueAccent,
+                                        progressColor: Colors.blue,
                                         lineWidth: 8,
                                         center: Text(
                                           controller.incomplete+controller.completed==0
@@ -234,7 +236,7 @@ class _homepageState extends State<homepage> {
                             children: [
                               Container(
                                 width: MediaQuery.of(context).size.width * 0.4,
-                                height: MediaQuery.of(context).size.width * 0.8,
+                                height: MediaQuery.of(context).size.height * 0.3,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(20),
                                     color: Colors.white),
@@ -253,7 +255,7 @@ class _homepageState extends State<homepage> {
                                           width: 100,
                                           height: 40,
                                           decoration: BoxDecoration(
-                                              color: Colors.blueAccent,
+                                              color: Colors.blue,
                                               borderRadius:
                                                   BorderRadius.circular(10)),
                                           child: const Center(
@@ -293,7 +295,7 @@ class _homepageState extends State<homepage> {
                                               width: 100,
                                               height: 40,
                                               decoration: BoxDecoration(
-                                                  color: Colors.blueAccent,
+                                                  color: Colors.blue,
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           10)),
@@ -336,7 +338,7 @@ class _homepageState extends State<homepage> {
                                               width: 100,
                                               height: 40,
                                               decoration: BoxDecoration(
-                                                  color: Colors.blueAccent,
+                                                  color: Colors.blue,
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                           10)),
@@ -378,6 +380,7 @@ class _homepageState extends State<homepage> {
                                 builder: (context, snapshot) {
                                   urgent_tasks.clear();
                                   int complete = 0;
+                                  String date = '';
                                   int incomplete = 0;
                                   int indee = 0;
                                   if (snapshot.hasData) {
@@ -392,6 +395,12 @@ class _homepageState extends State<homepage> {
                                           tasks['complete'] == 'incomplete' &&
                                           tasks['sender'] == loggedUser) {
                                         date = tasks['date'];
+                                      }
+                                      if(tasks['date']==date && tasks['sender']==loggedUser && tasks['complete']=='incomplete'){
+                                        incomplete++;
+                                      }
+                                      else if(incomplete==0){
+                                        date='';
                                       }
 
                                       if (tasks['urgent'] == 'true' &&
@@ -413,17 +422,12 @@ class _homepageState extends State<homepage> {
                                       }
                                     }
                                     for(var taskss in task1){
+                                      print(date+incomplete.toString());
                                       if (taskss['date'] == date &&
                                           taskss['sender'] == loggedUser) {
                                         if (taskss['complete'] == 'complete') {
                                           complete++;
-                                        } else if (taskss['complete'] ==
-                                            'incomplete') {
-                                          incomplete++;
                                         }
-                                      }
-                                      else if (incomplete == 0) {
-                                        date = '';
                                       }
                                     }
                                     Future.delayed(Duration.zero,(){
@@ -513,7 +517,7 @@ class _homepageState extends State<homepage> {
                                                                   Icons.edit,
                                                                   size: 20,
                                                                   color: Colors
-                                                                      .blueAccent,
+                                                                      .blue,
                                                                 ),
                                                               ),
                                                             ),
@@ -647,7 +651,7 @@ class _homepageState extends State<homepage> {
                         width: 180,
                         height: 60,
                         decoration: BoxDecoration(
-                            color: Colors.blueAccent,
+                            color: Colors.blue,
                             borderRadius: BorderRadius.circular(20)),
                         child: const Center(
                             child: Text(

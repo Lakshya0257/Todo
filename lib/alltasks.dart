@@ -170,7 +170,7 @@ class _all_tasksState extends State<all_tasks> {
                                                     icon: const Icon(
                                                       Icons.edit,
                                                       size: 20,
-                                                      color: Colors.blueAccent,
+                                                      color: Colors.blue,
                                                     ),
                                                   ),
                                                 ),
